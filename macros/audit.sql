@@ -1,11 +1,20 @@
 {% macro get_audit_relation() %}
+
+    {#-
+    A project's version of the generate_schema_name macro will take precedence
+    over the global version
+    -#}
+    {%- set audit_schema=generate_schema_name('dbt_meta') -%}
+
     {%- set audit_table =
         api.Relation.create(
             identifier='dbt_audit_log',
-            schema='dbt_meta',
+            schema=audit_schema,
             type='table'
         ) -%}
+
     {{ return(audit_table) }}
+
 {% endmacro %}
 
 
