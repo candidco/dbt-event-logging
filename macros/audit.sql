@@ -1,11 +1,24 @@
+{% macro generate_audit_schema_name() %}
+
+    {#-
+    Separating this into a macro so the behavior can be changed by a local macro.
+    -#}
+    {{generate_schema_name('dbt_meta')}}
+{% endmacro %}
+
 {% macro get_audit_relation() %}
+
+    {%- set audit_schema=generate_audit_schema_name() -%}
+
     {%- set audit_table =
         api.Relation.create(
             identifier='dbt_audit_log',
-            schema='dbt_meta',
+            schema=audit_schema,
             type='table'
         ) -%}
+
     {{ return(audit_table) }}
+
 {% endmacro %}
 
 
